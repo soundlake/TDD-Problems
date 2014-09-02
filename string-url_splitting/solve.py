@@ -1,9 +1,9 @@
 import re
 
-keys = ("protocol", "domain", "path")
-
 def URL_split(url):
-    return {"protocol": None, "domain": None, "path": None}
+    substr = re.split("://|/", url, 2)
+    if len(substr) == 2: substr.append("")
+    return {"protocol": substr[0], "domain": substr[1], "path": substr[2]}
 
 
 def test_each(src, key, result):
