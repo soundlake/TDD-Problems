@@ -18,6 +18,12 @@ class test_check_amount(unittest.TestCase):
     def test_cents(self):
         self.template(0.04, '04/100 dollars')
 
+    def test_ones_1(self):
+        self.template(5, 'Five dollars')
+
+    def test_ones_2(self):
+        self.template(1.1, 'One and 10/100 dollars')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,6 +1,7 @@
 class check_amount:
     def __init__(self, amount):
         self.raw = amount
+        self.ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
     def __str__(self):
         if not self.raw:
@@ -12,6 +13,11 @@ class check_amount:
         result = 'dollars'
         if self.cents:
             result = '%02d/100 ' % (self.cents * 100) + result
+        if self.one:
+            part = self.ones[self.one] + ' '
+            if len(result) > len('dollars'):
+                part += 'and '
+            result = part + result
 
         return result.capitalize()
 
