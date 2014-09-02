@@ -1,20 +1,21 @@
 import re
 
-def URL_split(url):
-    substr = re.split("://|/", url, 2)
-    if len(substr) == 2: substr.append("")
-    return {"protocol": substr[0], "domain": substr[1], "path": substr[2]}
+protocol, domain, path = 0, 1, 2
 
+def URL_split(url):
+    sub = re.split("://|/", url, 2)
+    while len(sub) < 3: sub.append("")
+    return sub
 
 def test_each(src, key, result):
     return URL_split(src)[key] == result
 
-test_cases = [("http://www.google.se", "protocol", "http"),
-              ("http://www.google.se", "domain", "www.google.se"),
-              ("http://www.google.se", "path", ""),
-              ("http://some.thing", "protocol", "http"),
-              ("ftp://a.large.site", "domain", "a.large.site"),
-              ("http://a.site.with/a-path", "path", "a-path")]
+test_cases = [("http://www.google.se", protocol, "http"),
+              ("http://www.google.se", domain, "www.google.se"),
+              ("http://www.google.se", path, ""),
+              ("http://some.thing", protocol, "http"),
+              ("ftp://a.large.site", domain, "a.large.site"),
+              ("http://a.site.with/a-path", path, "a-path")]
 
 def test_runner(cases):
     total = len(cases)
