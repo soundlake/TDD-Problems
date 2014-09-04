@@ -29,14 +29,13 @@ class map_of_vars:
 
 
 class template_engine:
-    pat_key = r'{\$(?P<key>.+?)}'
+    pat_key = r'({\$)+(?P<key>.+?)}'
 
     @classmethod
     def find_keys(cls, src):
         keys = []
         for mo in re.finditer(cls.pat_key, src):
             keys.append(mo.group('key'))
-        print(keys)
         return keys
 
     @classmethod
