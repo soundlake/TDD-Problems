@@ -3,30 +3,39 @@ class check_amount:
         self.raw = amount
         self.ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
         self.tens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+        self.decs = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+
+    def str_cents(self):
+        if self.cents: return '%02d/100 ' % round(self.cents * 100)
+        else: return ''
+
+    def str_dec(self):
+        part = ''
+        if self.one or self.dec:
+            if self.dec == 1:
+                part = self.tens[self.one] + ' '
+            else:
+                if self.dec > 1:
+                    part = self.decs[self.dec]
+                    if self.one:
+                        part += '-'
+                part += self.ones[self.one] + ' '
+            if self.cents: part += 'and '
+        return part
 
     def __str__(self):
+        # simple ones
         if not self.raw:
             return 'Zero dollar'
         if self.raw == 0.01:
             return '01/100 dollar'
         if self.raw == 1:
             return 'One dollar'
+
+        # complex
         result = 'dollars'
-        if self.cents:
-            result = '%02d/100 ' % round(self.cents * 100) + result
-        if self.one:
-            if self.dec == 1:
-                part = self.tens[self.one] + ' '
-            else:
-                part = self.ones[self.one] + ' '
-            if len(result) > len('dollars'):
-                part += 'and '
-            result = part + result
-        if self.dec == 1 and not self.one:
-            part = 'Ten '
-            if len(result) > len('dollars'):
-                part += 'and '
-            result = part + result
+        result = self.str_cents() + result
+        result = self.str_dec() + result
 
         return result.capitalize()
 
