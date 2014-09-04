@@ -2,8 +2,20 @@ import re
 
 
 
+class MissingValueError(Exception):
+    def __init__(self, val):
+        self.value = val
+    def __str__(self):
+        return repr('There is no value with the key <' + self.value + '>')
+
+
+
 class map_of_vars:
     dictionary = dict()
+
+    @classmethod
+    def init(cls):
+        cls.dictionary = dict()
 
     @classmethod
     def put(cls, key, value):
@@ -11,24 +23,26 @@ class map_of_vars:
 
     @classmethod
     def get(cls, key):
-        return cls.dictionary[key]
+        if key in cls.dictionary: return cls.dictionary[key]
+        else: raise MissingValueError(key)
 
 
 
 class template_engine:
     pat_key = r'{\$(?P<key>.+?)}'
-    keys = []
 
     @classmethod
     def find_keys(cls, src):
+        keys = []
         for mo in re.finditer(cls.pat_key, src):
-            cls.keys.append(mo.group('key'))
-        print(cls.keys)
+            keys.append(mo.group('key'))
+        print(keys)
+        return keys
 
     @classmethod
     def evaluate(cls, src, mov):
-        template_engine.find_keys(src)
-        for key in cls.keys:
+        keys = template_engine.find_keys(src)
+        for key in keys:
             val = map_of_vars.get(key)
             src = re.sub('{\$' + key + '}', val, src)
         return src
