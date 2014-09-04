@@ -16,16 +16,19 @@ class map_of_vars:
 
 
 class template_engine:
-    pat_key = r'{\$(?P<key>.+)}'
+    pat_key = r'{\$(?P<key>.+?)}'
+    keys = []
 
     @classmethod
     def find_keys(cls, src):
-        mo = re.search(cls.pat_key, 'Hello {$name}')
-        print(mo.groups())
-        return mo.group('key')
+        for mo in re.finditer(cls.pat_key, src):
+            cls.keys.append(mo.group('key'))
+        print(cls.keys)
 
     @classmethod
     def evaluate(cls, src, mov):
-        key = template_engine.find_keys(src)
-        val = map_of_vars.get(key)
-        return re.sub('{\$' + key + '}', val, src)
+        template_engine.find_keys(src)
+        for key in cls.keys:
+            val = map_of_vars.get(key)
+            src = re.sub('{\$' + key + '}', val, src)
+        return src
